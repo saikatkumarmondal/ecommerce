@@ -23,7 +23,7 @@ export const brandApi = createApi({
       query: ({ id, data }) => ({ url: `/brands/${id}`, method: "PUT", body: data }),
       invalidatesTags: ["Brands"],
     }),
-    deleteBrand: builder.mutation<ApiResponse, string>({
+    deleteBrand: builder.mutation<ApiResponse<void>, string>({
       query: (id) => ({ url: `/brands/${id}`, method: "DELETE" }),
       invalidatesTags: ["Brands"],
     }),
