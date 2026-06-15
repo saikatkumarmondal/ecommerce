@@ -16,7 +16,7 @@ export const orderApi = createApi({
   }),
   tagTypes: ["Orders", "Order"],
   endpoints: (builder) => ({
-    getOrders: builder.query
+    getOrders: builder.query<
       { data: Order[]; meta: PaginationMeta },
       { page?: number; limit?: number }
     >({
@@ -33,7 +33,7 @@ export const orderApi = createApi({
       transformResponse: (res: ApiResponse<Order>) => res.data!,
       providesTags: (_r, _e, id) => [{ type: "Order", id }],
     }),
-    updateOrderStatus: builder.mutation
+    updateOrderStatus: builder.mutation<
       ApiResponse<Order>,
       { id: string; orderStatus: string }
     >({
@@ -44,7 +44,7 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ["Orders", "Order"],
     }),
-    createCheckoutSession: builder.mutation
+    createCheckoutSession: builder.mutation<
       ApiResponse<{ sessionUrl: string }>,
       { shippingAddress: ShippingAddress; couponCode?: string }
     >({

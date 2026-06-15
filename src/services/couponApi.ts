@@ -38,7 +38,7 @@ export const couponApi = createApi({
       transformResponse: (res: ApiResponse<Coupon[]>) => res.data ?? [],
       providesTags: ["Coupons"],
     }),
-    validateCoupon: builder.mutation
+    validateCoupon: builder.mutation<
       ApiResponse<CouponValidation>,
       { code: string; orderTotal: number }
     >({

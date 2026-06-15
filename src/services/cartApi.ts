@@ -21,14 +21,14 @@ export const cartApi = createApi({
       transformResponse: (res: ApiResponse<Cart>) => res.data!,
       providesTags: ["Cart"],
     }),
-    addToCart: builder.mutation
+    addToCart: builder.mutation<
       ApiResponse<CartItem>,
       { productId: string; quantity: number }
     >({
       query: (body) => ({ url: "/cart", method: "POST", body }),
       invalidatesTags: ["Cart"],
     }),
-    updateCartItem: builder.mutation
+    updateCartItem: builder.mutation<
       ApiResponse<CartItem>,
       { itemId: string; quantity: number }
     >({

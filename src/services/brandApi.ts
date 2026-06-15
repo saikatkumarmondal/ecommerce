@@ -16,7 +16,7 @@ export const brandApi = createApi({
       query: (body) => ({ url: "/brands", method: "POST", body }),
       invalidatesTags: ["Brands"],
     }),
-    updateBrand: builder.mutation
+    updateBrand: builder.mutation<
       ApiResponse<Brand>,
       { id: string; data: { name?: string; logo?: string } }
     >({

@@ -16,7 +16,7 @@ export const categoryApi = createApi({
       query: (body) => ({ url: "/categories", method: "POST", body }),
       invalidatesTags: ["Categories"],
     }),
-    updateCategory: builder.mutation
+    updateCategory: builder.mutation<
       ApiResponse<Category>,
       { id: string; data: { name?: string; image?: string } }
     >({

@@ -16,7 +16,7 @@ export const productApi = createApi({
   }),
   tagTypes: ["Products", "Product"],
   endpoints: (builder) => ({
-    getProducts: builder.query
+    getProducts: builder.query<
       { data: Product[]; meta: PaginationMeta },
       ProductFilters
     >({
@@ -36,7 +36,7 @@ export const productApi = createApi({
       providesTags: ["Products"],
     }),
 
-    getProductBySlug: builder.query
+    getProductBySlug: builder.query<
       { product: Product; relatedProducts: Product[] },
       string
     >({
@@ -51,7 +51,7 @@ export const productApi = createApi({
       invalidatesTags: ["Products"],
     }),
 
-    updateProduct: builder.mutation
+    updateProduct: builder.mutation<
       ApiResponse<Product>,
       { id: string; data: Partial<Product> & { images?: string[] } }
     >({

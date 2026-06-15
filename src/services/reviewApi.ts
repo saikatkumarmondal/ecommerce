@@ -15,7 +15,7 @@ export const reviewApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    createReview: builder.mutation
+    createReview: builder.mutation<
       ApiResponse<Review>,
       { productId: string; rating: number; title: string; comment: string }
     >({

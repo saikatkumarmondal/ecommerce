@@ -10,7 +10,7 @@ export const chatApi = createApi({
   reducerPath: "chatApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   endpoints: (builder) => ({
-    sendMessage: builder.mutation
+    sendMessage: builder.mutation<
       ApiResponse<{ reply: string }>,
       { message: string; history: ChatMessage[] }
     >({

@@ -32,7 +32,7 @@ export const adminApi = createApi({
       transformResponse: (res: ApiResponse<Analytics>) => res.data!,
       providesTags: ["Analytics"],
     }),
-    getUsers: builder.query
+    getUsers: builder.query<
       { data: User[]; meta: PaginationMeta },
       { page?: number; limit?: number }
     >({
