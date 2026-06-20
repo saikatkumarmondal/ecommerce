@@ -3,29 +3,26 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
 import { Loader2 } from "lucide-react";
-import { useRegisterMutation } from "@/services/authApi";
+import { useLoginMutation } from "@/services/authApi";
+import { setCredentials } from "@/store/slices/authSlice";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const router = useRouter();
-  const [register, { isLoading }] = useRegisterMutation();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const dispatch = useDispatch();
+  const [login, { isLoading }] = useLoginMutation();
+  const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
   const validateField = (name: string, value: string) => {
     switch (name) {
-      case "name":
-        if (value.length > 0 && value.length < 2) return "Name must be at least 2 characters";
-        return "";
       case "email":
         if (value.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email address";
         return "";
       case "password":
-        if (value.length === 0) return "";
-        if (value.length < 8) return "Password must be at least 8 characters";
-        if (!/[A-Z]/.test(value)) return "Must contain an uppercase letter";
-        if (!/[0-9]/.test(value)) return "Must contain a number";
+        if (value.length === 0) return "Password is required";
         return "";
       default:
         return "";
@@ -43,37 +40,30 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
-    const nameErr = validateField("name", form.name);
     const emailErr = validateField("email", form.email);
     const passwordErr = validateField("password", form.password);
 
-    if (nameErr || emailErr || passwordErr) {
-      setFieldErrors({ name: nameErr, email: emailErr, password: passwordErr });
+    if (emailErr || passwordErr) {
+      setFieldErrors({ email: emailErr, password: passwordErr });
       return;
     }
 
     try {
-      const res = await register(form).unwrap();
-      if (res.success) {
-        router.push("/login");
+      const res = await login(form).unwrap();
+      if (res.success && res.data) {
+        dispatch(setCredentials({ user: res.data.user, token: res.data.token }));
+        router.push("/");
       } else {
-        setError(res.message || "Registration failed");
+        setError(res.message || "Login failed");
       }
     } catch (err: any) {
-      const apiFieldErrors = err?.data?.errors;
-      if (apiFieldErrors) {
-        const firstKey = Object.keys(apiFieldErrors)[0];
-        const firstMsg = apiFieldErrors[firstKey]?.[0];
-        setError(firstMsg || "Validation failed");
-      } else {
-        setError(err?.data?.message || "Something went wrong");
-      }
+      setError(err?.data?.message || "Invalid credentials");
     }
   };
 
   return (
     <div className="bg-white p-8 rounded-2xl shadow-md border">
-      <h1 className="text-2xl font-bold mb-6 text-center">Create Account</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
 
       {error && (
         <div className="bg-red-50 text-red-600 text-sm p-3 rounded-md mb-4">
@@ -82,23 +72,6 @@ export default function RegisterPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-            className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 ${
-              fieldErrors.name ? "border-red-400 focus:ring-red-400" : "focus:ring-black"
-            }`}
-          />
-          {fieldErrors.name && (
-            <p className="text-red-500 text-xs mt-1">{fieldErrors.name}</p>
-          )}
-        </div>
-
         <div>
           <label className="block text-sm font-medium mb-1">Email</label>
           <input
@@ -131,9 +104,6 @@ export default function RegisterPage() {
           {fieldErrors.password && (
             <p className="text-red-500 text-xs mt-1">{fieldErrors.password}</p>
           )}
-          {!fieldErrors.password && form.password.length > 0 && (
-            <p className="text-green-600 text-xs mt-1">Password looks good</p>
-          )}
         </div>
 
         <button
@@ -142,14 +112,14 @@ export default function RegisterPage() {
           className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition disabled:opacity-50 flex items-center justify-center gap-2"
         >
           {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-          {isLoading ? "Creating account..." : "Register"}
+          {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>
 
       <p className="text-sm text-center mt-4 text-gray-600">
-        Already have an account?{" "}
-        <Link href="/login" className="text-black font-medium underline">
-          Login
+        Don&apos;t have an account?{" "}
+        <Link href="/register" className="text-black font-medium underline">
+          Register
         </Link>
       </p>
     </div>

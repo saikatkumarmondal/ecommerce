@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
     const reply = await getChatResponse(message, history);
 
     return NextResponse.json({ success: true, message: "Response generated", data: { reply } });
-  } catch (error) {
-    return NextResponse.json({ success: false, message: "AI service error" }, { status: 500 });
-  }
+ } catch (error) {
+  console.error("CHAT_ERROR:", error);
+  return NextResponse.json({ success: false, message: "AI service error" }, { status: 500 });
+}
 }

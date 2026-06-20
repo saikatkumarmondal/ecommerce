@@ -70,16 +70,16 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-gray-950 text-gray-300 mt-20">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+    <footer className="bg-gray-950 text-gray-300">
+      <div className="container mx-auto px-4 py-10 sm:py-12 lg:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10">
           {/* Brand */}
-          <div className="lg:col-span-2">
+          <div className="sm:col-span-2 lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-                <ShoppingBag className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary flex items-center justify-center">
+                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">{APP_NAME}</span>
+              <span className="text-lg sm:text-xl font-bold text-white">{APP_NAME}</span>
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed mb-6 max-w-xs">
               Your one-stop destination for premium products. Quality, value, and exceptional shopping experience.
@@ -87,26 +87,28 @@ export function Footer() {
 
             {/* Newsletter */}
             <p className="text-sm font-semibold text-white mb-3">Stay Updated</p>
-            <div className="flex gap-2">
+            <div className="flex flex-col xs:flex-row sm:flex-row gap-2">
               <Input
                 placeholder="Enter your email"
-                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 h-10"
+                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 h-10 text-sm"
               />
-              <Button size="sm" className="flex-shrink-0 px-4">Subscribe</Button>
+              <Button size="sm" className="flex-shrink-0 px-4 w-full xs:w-auto sm:w-auto">
+                Subscribe
+              </Button>
             </div>
 
             {/* Contact */}
             <div className="mt-6 space-y-2">
               <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Mail className="w-4 h-4" />
-                <span>support@shopflow.com</span>
+                <Mail className="w-4 h-4 flex-shrink-0" />
+                <span className="break-all">support@shopflow.com</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Phone className="w-4 h-4" />
+                <Phone className="w-4 h-4 flex-shrink-0" />
                 <span>+1 (800) 123-4567</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-400">
-                <MapPin className="w-4 h-4" />
+                <MapPin className="w-4 h-4 flex-shrink-0" />
                 <span>New York, USA</span>
               </div>
             </div>
@@ -138,34 +140,34 @@ export function Footer() {
           ))}
         </div>
 
-        <Separator className="my-10 bg-gray-800" />
+        <Separator className="my-8 sm:my-10 bg-gray-800" />
 
         {/* Bottom */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-500">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-4">
+          <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left order-3 sm:order-1">
             © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
           </p>
 
           {/* Social Links */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 order-1 sm:order-2">
             {socialLinks.map(({ icon: Icon, href, label }) => (
               <Link
                 key={label}
                 href={href}
                 aria-label={label}
-                className="w-9 h-9 rounded-lg bg-gray-800 hover:bg-primary transition-colors flex items-center justify-center"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gray-800 hover:bg-primary transition-colors flex items-center justify-center"
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </Link>
             ))}
           </div>
 
           {/* Payment Icons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-center order-2 sm:order-3">
             {["VISA", "MC", "AMEX", "PayPal"].map((brand) => (
               <div
                 key={brand}
-                className="px-2 py-1 bg-gray-800 rounded text-[10px] font-bold text-gray-400"
+                className="px-2 py-1 bg-gray-800 rounded text-[9px] sm:text-[10px] font-bold text-gray-400"
               >
                 {brand}
               </div>
