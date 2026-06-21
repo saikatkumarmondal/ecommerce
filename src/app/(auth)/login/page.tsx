@@ -1,19 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { useLoginMutation } from "@/services/authApi";
 import { setCredentials } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [errorKey, setErrorKey] = useState(0);
   const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
   const validateField = (name: string, value: string) => {
@@ -27,6 +29,11 @@ export default function LoginPage() {
       default:
         return "";
     }
+  };
+
+  const showError = (msg: string) => {
+    setError(msg);
+    setErrorKey((k) => k + 1);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,12 +59,20 @@ export default function LoginPage() {
       const res = await login(form).unwrap();
       if (res.success && res.data) {
         dispatch(setCredentials({ user: res.data.user, token: res.data.token }));
-        router.push("/");
+
+        const redirect = searchParams.get("redirect");
+        if (redirect) {
+          router.push(redirect);
+        } else if (res.data.user.role === "ADMIN") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
       } else {
-        setError(res.message || "Login failed");
+        showError(res.message || "Login failed");
       }
     } catch (err: any) {
-      setError(err?.data?.message || "Invalid credentials");
+      showError(err?.data?.message || "Invalid credentials");
     }
   };
 
@@ -66,8 +81,12 @@ export default function LoginPage() {
       <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-md mb-4">
-          {error}
+        <div
+          key={errorKey}
+          className="animate-slideDown animate-shake flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-xs px-3 py-2 rounded-md mb-4"
+        >
+          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
@@ -85,7 +104,7 @@ export default function LoginPage() {
             }`}
           />
           {fieldErrors.email && (
-            <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>
+            <p className="text-red-500 text-xs mt-1 animate-slideDown">{fieldErrors.email}</p>
           )}
         </div>
 
@@ -102,7 +121,7 @@ export default function LoginPage() {
             }`}
           />
           {fieldErrors.password && (
-            <p className="text-red-500 text-xs mt-1">{fieldErrors.password}</p>
+            <p className="text-red-500 text-xs mt-1 animate-slideDown">{fieldErrors.password}</p>
           )}
         </div>
 

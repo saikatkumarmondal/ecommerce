@@ -1,23 +1,24 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isAuthenticated, isHydrated } = useSelector((state: RootState) => state.auth as any);
 
   useEffect(() => {
     if (!isHydrated) return;
 
     if (!isAuthenticated) {
-      router.push("/login");
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
     } else if (user?.role !== "ADMIN") {
       router.push("/");
     }
-  }, [isAuthenticated, user, router, isHydrated]);
+  }, [isAuthenticated, user, router, isHydrated, pathname]);
 
   if (!isHydrated) {
     return (

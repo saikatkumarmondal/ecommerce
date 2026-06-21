@@ -10,6 +10,8 @@ import { couponApi } from "@/services/couponApi";
 import { reviewApi } from "@/services/reviewApi";
 import { adminApi } from "@/services/adminApi";
 import { chatApi } from "@/services/chatApi";
+import { userApi } from "@/services/userApi";
+
 import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
 import wishlistReducer from "./slices/wishlistSlice";
@@ -30,6 +32,8 @@ export const store = configureStore({
     [reviewApi.reducerPath]: reviewApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -43,7 +47,8 @@ export const store = configureStore({
       couponApi.middleware,
       reviewApi.middleware,
       adminApi.middleware,
-      chatApi.middleware
+      chatApi.middleware,
+      userApi.middleware
     ),
 });
 
