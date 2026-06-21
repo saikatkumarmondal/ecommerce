@@ -1,10 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiResponse } from "@/types/api.types";
 import { Brand } from "@/types/product.types";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithAuth } from "@/lib/baseQuery";
 
 export const brandApi = createApi({
   reducerPath: "brandApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ["Brands"],
   endpoints: (builder) => ({
     getBrands: builder.query<Brand[], void>({
@@ -16,14 +17,11 @@ export const brandApi = createApi({
       query: (body) => ({ url: "/brands", method: "POST", body }),
       invalidatesTags: ["Brands"],
     }),
-    updateBrand: builder.mutation<
-      ApiResponse<Brand>,
-      { id: string; data: { name?: string; logo?: string } }
-    >({
+    updateBrand: builder.mutation<ApiResponse<Brand>, { id: string; data: { name?: string; logo?: string } }>({
       query: ({ id, data }) => ({ url: `/brands/${id}`, method: "PUT", body: data }),
       invalidatesTags: ["Brands"],
     }),
-    deleteBrand: builder.mutation<ApiResponse, string>({
+    deleteBrand: builder.mutation<ApiResponse<void>, string>({
       query: (id) => ({ url: `/brands/${id}`, method: "DELETE" }),
       invalidatesTags: ["Brands"],
     }),

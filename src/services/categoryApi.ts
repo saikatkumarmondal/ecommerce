@@ -1,10 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiResponse } from "@/types/api.types";
 import { Category } from "@/types/product.types";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithAuth } from "@/lib/baseQuery";
 
 export const categoryApi = createApi({
   reducerPath: "categoryApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ["Categories"],
   endpoints: (builder) => ({
     getCategories: builder.query<Category[], void>({
@@ -16,14 +17,11 @@ export const categoryApi = createApi({
       query: (body) => ({ url: "/categories", method: "POST", body }),
       invalidatesTags: ["Categories"],
     }),
-    updateCategory: builder.mutation<
-      ApiResponse<Category>,
-      { id: string; data: { name?: string; image?: string } }
-    >({
+    updateCategory: builder.mutation<ApiResponse<Category>, { id: string; data: { name?: string; image?: string } }>({
       query: ({ id, data }) => ({ url: `/categories/${id}`, method: "PUT", body: data }),
       invalidatesTags: ["Categories"],
     }),
-    deleteCategory: builder.mutation<ApiResponse, string>({
+    deleteCategory: builder.mutation<ApiResponse<void>, string>({
       query: (id) => ({ url: `/categories/${id}`, method: "DELETE" }),
       invalidatesTags: ["Categories"],
     }),

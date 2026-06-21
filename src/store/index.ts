@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { authApi } from "@/services/authApi";
 import { productApi } from "@/services/productApi";
 import { categoryApi } from "@/services/categoryApi";
 import { brandApi } from "@/services/brandApi";
@@ -18,6 +19,7 @@ export const store = configureStore({
     auth: authReducer,
     cart: cartReducer,
     wishlist: wishlistReducer,
+    [authApi.reducerPath]: authApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
     [categoryApi.reducerPath]: categoryApi.reducer,
     [brandApi.reducerPath]: brandApi.reducer,
@@ -31,6 +33,7 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
+      authApi.middleware,
       productApi.middleware,
       categoryApi.middleware,
       brandApi.middleware,

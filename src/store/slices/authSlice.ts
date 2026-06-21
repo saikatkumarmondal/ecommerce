@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AuthState, User } from "@/types/user.types";
 
-const initialState: AuthState = {
+const initialState: AuthState & { isHydrated: boolean } = {
   user: null,
   token: null,
   isAuthenticated: false,
+  isHydrated: false,
 };
 
 const authSlice = createSlice({
@@ -33,6 +34,7 @@ const authSlice = createSlice({
           state.isAuthenticated = true;
         }
       }
+      state.isHydrated = true;
     },
     logout: (state) => {
       state.user = null;
