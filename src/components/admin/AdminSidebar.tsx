@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   Package,
@@ -14,6 +14,7 @@ import {
   ShoppingBag as Logo,
   Menu,
   X,
+  MessageSquare,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -24,7 +25,37 @@ const navItems = [
   { label: "Brands", href: "/admin/brands", icon: Tags },
   { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
   { label: "Users", href: "/admin/users", icon: Users },
+  { label: "Reviews", href: "/admin/reviews", icon: MessageSquare },
 ];
+
+const sidebarVariants = {
+  hidden: {
+    x: -280,
+  },
+  visible: {
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 280,
+      damping: 30,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    x: -15,
+  },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: {
+      delay: i * 0.05,
+      duration: 0.35,
+    },
+  }),
+};
 
 export function AdminSidebar() {
   const pathname = usePathname();
@@ -33,84 +64,155 @@ export function AdminSidebar() {
   return (
     <>
       {/* Mobile Toggle */}
-      <button
+      <motion.button
+        whileTap={{ scale: 0.92 }}
+        whileHover={{ scale: 1.05 }}
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 w-10 h-10 rounded-xl bg-gray-950 text-white flex items-center justify-center shadow-lg"
+        className="lg:hidden fixed top-4 left-4 z-[60] w-11 h-11 rounded-xl bg-gray-950 text-white flex items-center justify-center shadow-xl backdrop-blur-sm"
       >
         <Menu className="w-5 h-5" />
-      </button>
+      </motion.button>
 
       {/* Mobile Overlay */}
-      {mobileOpen && (
-        <div
-          onClick={() => setMobileOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
-        />
-      )}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            onClick={() => setMobileOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
-      <aside
-        className={`w-64 bg-gradient-to-b from-gray-950 to-gray-900 text-white flex flex-col fixed h-screen z-50 transition-transform duration-300 ease-in-out border-r border-gray-800/50 ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
+      <motion.aside
+        variants={sidebarVariants}
+        initial="hidden"
+        animate={mobileOpen || typeof window !== "undefined" ? "visible" : "hidden"}
+        className={`fixed top-0 left-0 z-50 h-screen
+          w-[280px] sm:w-[280px] md:w-[280px] lg:w-64
+          bg-gradient-to-b from-gray-950 via-gray-950 to-gray-900
+          text-white border-r border-gray-800/60
+          flex flex-col
+          transform-gpu
+          ${
+            mobileOpen
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0"
+          }`}
       >
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-800/50">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg shadow-primary/20">
-              <Logo className="w-4.5 h-4.5 text-white" />
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 lg:px-6 py-5 border-b border-gray-800/60">
+          <div className="flex items-center gap-3">
+            <motion.div
+              whileHover={{
+                rotate: 5,
+                scale: 1.05,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+              }}
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-xl shadow-primary/25"
+            >
+              <Logo className="w-5 h-5 text-white" />
+            </motion.div>
+
+            <div>
+              <h2 className="font-bold text-base lg:text-lg tracking-tight">
+                Admin Panel
+              </h2>
             </div>
-            <span className="font-bold text-lg tracking-tight">Admin Panel</span>
           </div>
-          <button
+
+          <motion.button
+            whileTap={{ scale: 0.9 }}
             onClick={() => setMobileOpen(false)}
-            className="lg:hidden text-gray-400 hover:text-white"
+            className="lg:hidden text-gray-400 hover:text-white transition-colors"
           >
             <X className="w-5 h-5" />
-          </button>
+          </motion.button>
         </div>
 
-        <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
-          {navItems.map(({ label, href, icon: Icon }) => {
-            const isActive = pathname === href;
-            return (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setMobileOpen(false)}
-                className="relative block"
-              >
-                <div
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 relative z-10 ${
-                    isActive
-                      ? "text-white"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
-                  }`}
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-5 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800">
+          <div className="space-y-1.5">
+            {navItems.map(({ label, href, icon: Icon }, index) => {
+              const isActive = pathname === href;
+
+              return (
+                <motion.div
+                  key={href}
+                  custom={index}
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
                 >
-                  <Icon className="w-4.5 h-4.5 flex-shrink-0" />
-                  {label}
-                </div>
-                {isActive && (
-                  <motion.div
-                    layoutId="admin-active-nav"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80 rounded-xl shadow-lg shadow-primary/25"
-                  />
-                )}
-              </Link>
-            );
-          })}
+                  <Link
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    className="relative block group"
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="admin-active-nav"
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 35,
+                        }}
+                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary to-primary/80 shadow-lg shadow-primary/20"
+                      />
+                    )}
+
+                    <div
+                      className={`relative z-10 flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
+                        isActive
+                          ? "text-white"
+                          : "text-gray-400 group-hover:text-white group-hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <motion.div
+                        whileHover={{
+                          x: 2,
+                        }}
+                        transition={{
+                          duration: 0.2,
+                        }}
+                      >
+                        <Icon className="w-4.5 h-4.5 flex-shrink-0" />
+                      </motion.div>
+
+                      <span>{label}</span>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
         </nav>
 
-        <div className="px-3 py-4 border-t border-gray-800/50">
+        {/* Footer */}
+        <div className="p-3 border-t border-gray-800/60">
           <Link
             href="/"
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
+            className="group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/[0.04] transition-all duration-300"
           >
-            <LogOut className="w-4.5 h-4.5" />
-            Back to Store
+            <motion.div
+              whileHover={{
+                x: -2,
+              }}
+            >
+              <LogOut className="w-4.5 h-4.5" />
+            </motion.div>
+
+            <span>Back to Store</span>
           </Link>
         </div>
-      </aside>
+      </motion.aside>
     </>
   );
 }

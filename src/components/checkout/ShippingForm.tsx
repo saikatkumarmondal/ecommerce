@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { ShippingAddress } from "@/types/order.types";
 import { useAppSelector } from "@/store/hooks";
+import { useEffect } from "react";
 
 const shippingSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -40,6 +41,24 @@ const COUNTRIES = [
   "Australia", "India", "Germany", "France", "Singapore",
 ];
 
+// Motion animation presets
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { type: "spring", stiffness: 300, damping: 24 } 
+  }
+};
+
 export function ShippingForm({ onSubmit, defaultValues }: ShippingFormProps) {
   const { user } = useAppSelector((s) => s.auth);
 
@@ -58,6 +77,11 @@ export function ShippingForm({ onSubmit, defaultValues }: ShippingFormProps) {
       ...defaultValues,
     },
   });
+
+  // Explicitly register the country field for React Hook Form tracking
+  useEffect(() => {
+    register("country");
+  }, [register]);
 
   const selectedCountry = watch("country");
 
@@ -107,82 +131,121 @@ export function ShippingForm({ onSubmit, defaultValues }: ShippingFormProps) {
   ] as const;
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-card border rounded-2xl p-6 lg:p-8">
-        <h2 className="text-xl font-bold flex items-center gap-2 mb-6">
-          <MapPin className="w-5 h-5 text-primary" />
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-0 py-4">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="bg-card border shadow-xl backdrop-blur-sm rounded-2xl p-5 sm:p-7 lg:p-9 transition-all duration-300 hover:shadow-2xl hover:border-muted-foreground/20"
+      >
+        <h2 className="text-xl sm:text-2xl font-black tracking-tight flex items-center gap-2.5 mb-8 border-b pb-4 border-muted">
+          <MapPin className="w-6 h-6 text-primary animate-pulse" />
           Shipping Information
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6"
+          >
             {fields.map((field) => (
               <motion.div
                 key={field.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={
-                  field.colSpan === 2 ? "sm:col-span-2" : ""
-                }
+                variants={itemVariants}
+                className={field.colSpan === 2 ? "sm:col-span-2" : ""}
               >
-                <div className="space-y-1.5">
-                  <Label htmlFor={field.id}>{field.label}</Label>
-                  <Input
-                    id={field.id}
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    {...register(field.id)}
-                    className={
-                      errors[field.id] ? "border-red-500 focus-visible:ring-red-500" : ""
-                    }
-                  />
+                <div className="space-y-2 group">
+                  <Label 
+                    htmlFor={field.id}
+                    className="text-sm font-semibold transition-colors duration-200 group-focus-within:text-primary"
+                  >
+                    {field.label}
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id={field.id}
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      {...register(field.id)}
+                      className={`h-11 rounded-xl transition-all duration-200 border-muted-foreground/20 focus-visible:ring-2 focus-visible:ring-offset-0 bg-background/50 backdrop-blur-xs ${
+                        errors[field.id] 
+                          ? "border-destructive focus-visible:ring-destructive" 
+                          : "focus-visible:ring-primary focus-visible:border-primary hover:border-muted-foreground/40"
+                      }`}
+                    />
+                  </div>
                   {errors[field.id] && (
-                    <p className="text-xs text-red-500">
+                    <motion.p 
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-xs font-medium text-destructive mt-1"
+                    >
                       {errors[field.id]?.message}
-                    </p>
+                    </motion.p>
                   )}
                 </div>
               </motion.div>
             ))}
 
-            {/* Country Select */}
-            <div className="sm:col-span-2 space-y-1.5">
-              <Label>Country</Label>
+            {/* Country Select Field */}
+            <motion.div variants={itemVariants} className="sm:col-span-2 space-y-2 group">
+              <Label className="text-sm font-semibold transition-colors duration-200 group-focus-within:text-primary">
+                Country
+              </Label>
               <Select
                 value={selectedCountry}
-                onValueChange={(val) => setValue("country", val)}
+                onValueChange={(val) => setValue("country", val, { shouldValidate: true })}
               >
                 <SelectTrigger
-                  className={errors.country ? "border-red-500" : ""}
+                  className={`h-11 rounded-xl bg-background/50 backdrop-blur-xs transition-all duration-200 border-muted-foreground/20 focus:ring-2 focus:ring-offset-0 ${
+                    errors.country 
+                      ? "border-destructive focus:ring-destructive" 
+                      : "focus:ring-primary hover:border-muted-foreground/40"
+                  }`}
                 >
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl max-h-64 backdrop-blur-md">
                   {COUNTRIES.map((c) => (
-                    <SelectItem key={c} value={c}>
+                    <SelectItem key={c} value={c} className="rounded-lg my-0.5 cursor-pointer">
                       {c}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               {errors.country && (
-                <p className="text-xs text-red-500">{errors.country.message}</p>
+                <motion.p 
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-xs font-medium text-destructive mt-1"
+                >
+                  {errors.country.message}
+                </motion.p>
               )}
-            </div>
-          </div>
-
-          <motion.div whileTap={{ scale: 0.98 }} className="mt-8">
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full h-12 font-bold rounded-xl gap-2"
-            >
-              Continue to Review
-              <ArrowRight className="w-5 h-5" />
-            </Button>
+            </motion.div>
           </motion.div>
+
+          {/* Styled Dynamic 3D Submit Button Layer */}
+          <div className="mt-10 relative group bg-primary/20 rounded-xl pt-1.5 transition-all duration-200">
+            <motion.div
+              whileHover={{ y: -5 }}
+              whileTap={{ y: 1.5 }}
+              transition={{ type: "spring", stiffness: 450, damping: 14 }}
+            >
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full h-13 font-extrabold text-base rounded-xl gap-2 shadow-[0_5px_0_0] shadow-primary-foreground/15 border-b-[5px] border-primary-foreground/20 transition-all duration-100 bg-primary hover:bg-primary/95 text-primary-foreground"
+              >
+                Continue to Review
+                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1.5" />
+              </Button>
+            </motion.div>
+          </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

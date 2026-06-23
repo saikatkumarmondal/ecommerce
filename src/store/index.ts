@@ -12,6 +12,9 @@ import { adminApi } from "@/services/adminApi";
 import { chatApi } from "@/services/chatApi";
 import { userApi } from "@/services/userApi";
 
+import { adminReviewApi } from "@/services/adminReviewApi";
+
+
 import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
 import wishlistReducer from "./slices/wishlistSlice";
@@ -33,6 +36,7 @@ export const store = configureStore({
     [adminApi.reducerPath]: adminApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [adminReviewApi.reducerPath]: adminReviewApi.reducer,
 
   },
   middleware: (getDefaultMiddleware) =>
@@ -48,7 +52,8 @@ export const store = configureStore({
       reviewApi.middleware,
       adminApi.middleware,
       chatApi.middleware,
-      userApi.middleware
+      userApi.middleware,
+      adminReviewApi.middleware
     ),
 });
 

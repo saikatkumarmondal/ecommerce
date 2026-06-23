@@ -51,19 +51,25 @@ export function OrderReview({
   };
 
   const handlePlaceOrder = async () => {
-    try {
-      const res = await createCheckoutSession({
-        shippingAddress,
-        couponCode: couponCode || undefined,
-      }).unwrap();
+  try {
+    const items = cart.items.map((item) => ({
+      productId: item.product.id,
+      quantity: item.quantity,
+    }));
 
-      if (res.data?.sessionUrl) {
-        window.location.href = res.data.sessionUrl;
-      }
-    } catch (err: any) {
-      toast.error(err?.data?.message ?? "Failed to create checkout session");
+    const res = await createCheckoutSession({
+      items,
+      shippingAddress,
+      couponCode: couponCode || undefined,
+    }).unwrap();
+
+    if (res.data?.sessionUrl) {
+      window.location.href = res.data.sessionUrl;
     }
-  };
+  } catch (err: any) {
+    toast.error(err?.data?.message ?? "Failed to create checkout session");
+  }
+};
 
   return (
     <div className="max-w-4xl mx-auto">

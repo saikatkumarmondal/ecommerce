@@ -101,15 +101,15 @@ export function Footer() {
             <div className="mt-6 space-y-2">
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <Mail className="w-4 h-4 flex-shrink-0" />
-                <span className="break-all">support@shopflow.com</span>
+                <span className="break-all">mondalsaikatkumar@gmail.om</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <Phone className="w-4 h-4 flex-shrink-0" />
-                <span>+1 (800) 123-4567</span>
+                <span>+8801954355330</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <MapPin className="w-4 h-4 flex-shrink-0" />
-                <span>New York, USA</span>
+                <span>Dhaka, Bangladesh</span>
               </div>
             </div>
           </div>

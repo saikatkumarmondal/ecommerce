@@ -7,12 +7,14 @@ export const POST = withAuth(async (req: AuthenticatedRequest) => {
   const body = await req.json();
   const parsed = createReviewSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ success: false, message: "Validation failed", errors: parsed.error.flatten().fieldErrors }, { status: 400 });
+    return NextResponse.json(
+      { success: false, message: "Validation failed", errors: parsed.error.flatten().fieldErrors },
+      { status: 400 }
+    );
   }
 
   const { productId, rating, title, comment } = parsed.data;
 
-  // শুধু যে customer এই product কিনেছে সে review দিতে পারবে
   const hasPurchased = await prisma.orderItem.findFirst({
     where: {
       productId,
@@ -21,7 +23,10 @@ export const POST = withAuth(async (req: AuthenticatedRequest) => {
   });
 
   if (!hasPurchased) {
-    return NextResponse.json({ success: false, message: "Only verified buyers can review" }, { status: 403 });
+    return NextResponse.json(
+      { success: false, message: "Only verified buyers can review" },
+      { status: 403 }
+    );
   }
 
   const existingReview = await prisma.review.findUnique({
@@ -29,16 +34,19 @@ export const POST = withAuth(async (req: AuthenticatedRequest) => {
   });
 
   if (existingReview) {
-    return NextResponse.json({ success: false, message: "You already reviewed this product" }, { status: 409 });
+    return NextResponse.json(
+      { success: false, message: "You already reviewed this product" },
+      { status: 409 }
+    );
   }
 
   const review = await prisma.review.create({
     data: { userId: req.user.userId, productId, rating, title, comment },
   });
 
-  // Product rating recalculate করো
+  // শুধু approved reviews দিয়ে rating calculate করো
   const allReviews = await prisma.review.aggregate({
-    where: { productId },
+    where: { productId, isApproved: true },
     _avg: { rating: true },
     _count: { rating: true },
   });
@@ -51,5 +59,8 @@ export const POST = withAuth(async (req: AuthenticatedRequest) => {
     },
   });
 
-  return NextResponse.json({ success: true, message: "Review submitted", data: review }, { status: 201 });
+  return NextResponse.json(
+    { success: true, message: "Review submitted. Pending admin approval.", data: review },
+    { status: 201 }
+  );
 });

@@ -16,12 +16,8 @@ export const orderApi = createApi({
   }),
   tagTypes: ["Orders", "Order"],
   endpoints: (builder) => ({
-    getOrders: builder.query<
-      { data: Order[]; meta: PaginationMeta },
-      { page?: number; limit?: number }
-    >({
-      query: ({ page = 1, limit = 10 } = {}) =>
-        `/orders?page=${page}&limit=${limit}`,
+    getOrders: builder.query<{ data: Order[]; meta: PaginationMeta }, { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 10 } = {}) => `/orders?page=${page}&limit=${limit}`,
       transformResponse: (res: ApiResponse<Order[]>) => ({
         data: res.data ?? [],
         meta: res.meta ?? { total: 0, page: 1, limit: 10, totalPages: 0 },
@@ -33,21 +29,11 @@ export const orderApi = createApi({
       transformResponse: (res: ApiResponse<Order>) => res.data!,
       providesTags: (_r, _e, id) => [{ type: "Order", id }],
     }),
-    updateOrderStatus: builder.mutation<
-      ApiResponse<Order>,
-      { id: string; orderStatus: string }
-    >({
-      query: ({ id, orderStatus }) => ({
-        url: `/orders/${id}`,
-        method: "PUT",
-        body: { orderStatus },
-      }),
+    updateOrderStatus: builder.mutation<ApiResponse<Order>, { id: string; orderStatus: string }>({
+      query: ({ id, orderStatus }) => ({ url: `/orders/${id}`, method: "PUT", body: { orderStatus } }),
       invalidatesTags: ["Orders", "Order"],
     }),
-    createCheckoutSession: builder.mutation<
-      ApiResponse<{ sessionUrl: string }>,
-      { shippingAddress: ShippingAddress; couponCode?: string }
-    >({
+    createCheckoutSession: builder.mutation<ApiResponse<{ sessionUrl: string; sessionId: string; orderId: string }>, { items: { productId: string; quantity: number }[]; shippingAddress: ShippingAddress; couponCode?: string }>({
       query: (body) => ({ url: "/checkout/session", method: "POST", body }),
     }),
   }),
