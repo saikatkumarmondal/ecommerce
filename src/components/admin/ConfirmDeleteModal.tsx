@@ -38,7 +38,7 @@ export function ConfirmDeleteModal({
             initial={{ opacity: 0, scale: 0.95, y: "calc(-50% + 12px)", x: "-50%" }}
             animate={{ opacity: 1, scale: 1, y: "-50%", x: "-50%" }}
             exit={{ opacity: 0, scale: 0.95, y: "calc(-50% + 12px)", x: "-50%" }}
-            transition={{ type: "spring", stiffness: 400, damping: 28 }}
+            transition={{ type: "spring" as const, stiffness: 400, damping: 28 }}
             className="fixed top-1/2 left-1/2 w-[calc(100%-2rem)] sm:w-full max-w-sm bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-2xl z-[60] p-6 text-center"
           >
             {/* Warning Icon Banner */}

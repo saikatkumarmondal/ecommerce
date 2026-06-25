@@ -160,7 +160,7 @@ export function HeroCarousel() {
                 <motion.div
                   variants={{
                     hidden: { opacity: 0, y: 20, rotateX: -30 },
-                    visible: { opacity: 1, y: 0, rotateX: 0, transition: { type: "spring", stiffness: 120 } }
+                    visible: { opacity: 1, y: 0, rotateX: 0, transition: { type: "spring" as const, stiffness: 120 } }
                   }}
                   className="inline-block perspective-[400px]"
                 >
@@ -174,7 +174,7 @@ export function HeroCarousel() {
                 <motion.h1
                   variants={{
                     hidden: { opacity: 0, x: -40, rotateY: -15 },
-                    visible: { opacity: 1, x: 0, rotateY: 0, transition: { type: "spring", damping: 18 } }
+                    visible: { opacity: 1, x: 0, rotateY: 0, transition: { type: "spring" as const, damping: 18 } }
                   }}
                   style={{ transformStyle: "preserve-3d" }}
                   className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight drop-shadow-[0_8px_24px_rgba(0,0,0,0.6)]"
@@ -256,7 +256,7 @@ export function HeroCarousel() {
                   initial={{ opacity: 0, scale: 0.82, rotateY: 30, z: -100 }}
                   animate={{ opacity: 1, scale: 1, rotateY: 0, z: 0 }}
                   exit={{ opacity: 0, scale: 0.82, rotateY: -30, z: -100 }}
-                  transition={{ type: "spring", stiffness: 90, damping: 16 }}
+                  transition={{ type: "spring" as const, stiffness: 90, damping: 16 }}
                   className="w-full h-full relative rounded-[32px] p-4 bg-zinc-900/20 border border-zinc-800/60 backdrop-blur-md shadow-[0_40px_80px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.1)]"
                   style={{ transformStyle: "preserve-3d" }}
                 >
@@ -311,7 +311,7 @@ export function HeroCarousel() {
                   idx === current ? "h-1.5 bg-zinc-100" : "h-1.5 bg-zinc-700 group-hover:bg-zinc-500"
                 }`}
                 animate={{ width: idx === current ? 28 : 6 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                transition={{ type: "spring" as const, stiffness: 260, damping: 20 }}
               />
             </button>
           ))}

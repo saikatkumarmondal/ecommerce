@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion,Variants  } from "framer-motion";
 import { User, Mail, Shield, Calendar, Package, Heart } from "lucide-react";
 import Link from "next/link";
 
@@ -24,23 +24,22 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 15 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.4,
-      ease: [0.25, 1, 0.5, 1], // Custom smooth ease-out cubic
+      ease: [0.25, 1, 0.5, 1] as [number, number, number, number],
     },
   },
 };
-
 const springTransition = {
-  type: "spring",
+  type: "spring" as const,
   stiffness: 300,
   damping: 22,
-};
+} as const;
 
 export default function ProfilePage() {
   const { user } = useAppSelector((s) => s.auth);
@@ -189,7 +188,7 @@ export default function ProfilePage() {
 
                   <motion.div
                     whileHover={{ x: 4, backgroundColor: "rgba(var(--muted), 0.15)" }}
-                    transition={{ type: "tween", duration: 0.2 }}
+                    transition={{ type: "tween" as const, duration: 0.2 }}
                     className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl p-3 hover:bg-muted/30 transition-colors"
                   >
                     <div className="min-w-0">

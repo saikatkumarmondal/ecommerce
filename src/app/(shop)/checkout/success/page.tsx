@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { CheckCircle, Package, ArrowRight, Home } from "lucide-react";
+import { CheckCircle, Package, Home } from "lucide-react";
 import Link from "next/link";
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const orderId = searchParams.get("order_id");
@@ -17,7 +17,6 @@ export default function CheckoutSuccessPage() {
       router.push("/");
       return;
     }
-
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -28,7 +27,6 @@ export default function CheckoutSuccessPage() {
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(timer);
   }, [orderId, router]);
 
@@ -37,13 +35,13 @@ export default function CheckoutSuccessPage() {
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        transition={{ type: "spring" as const, stiffness: 200, damping: 20 }}
         className="bg-white rounded-3xl shadow-xl p-8 sm:p-12 max-w-md w-full text-center"
       >
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          transition={{ delay: 0.2, type: "spring" as const, stiffness: 200 }}
           className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6"
         >
           <CheckCircle className="w-10 h-10 text-green-500" />
@@ -51,7 +49,7 @@ export default function CheckoutSuccessPage() {
 
         <h1 className="text-2xl sm:text-3xl font-black mb-2">Payment Successful!</h1>
         <p className="text-gray-500 mb-6 text-sm sm:text-base">
-          Thank you for your order. We've received your payment and will process your order shortly.
+          Thank you for your order. We have received your payment and will process your order shortly.
         </p>
 
         {orderId && (
@@ -84,5 +82,17 @@ export default function CheckoutSuccessPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-4 border-black border-t-transparent animate-spin" />
+      </div>
+    }>
+      <CheckoutSuccessContent />
+    </Suspense>
   );
 }

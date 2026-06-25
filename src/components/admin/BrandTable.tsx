@@ -22,7 +22,7 @@ const containerVariants = {
 // Item pop-in animation
 const itemVariants = {
   hidden: { opacity: 0, y: 12, scale: 0.98 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 260, damping: 20 } }
+  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 260, damping: 20 } }
 };
 
 export function BrandTable({ onEdit }: BrandTableProps) {

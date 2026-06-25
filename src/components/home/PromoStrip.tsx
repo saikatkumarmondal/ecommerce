@@ -40,7 +40,7 @@ export function PromoStrip() {
               animate={{ rotateX: 0, opacity: 1, y: 0 }}
               exit={{ rotateX: -90, opacity: 0, y: -15 }}
               transition={{ 
-                type: "spring", 
+                type: "spring" as const, 
                 stiffness: 120, 
                 damping: 14,
                 mass: 0.8

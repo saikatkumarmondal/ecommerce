@@ -117,7 +117,7 @@ export function AIChatWidget() {
             initial={{ opacity: 0, y: 24, scale: 0.92 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.92 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            transition={{ type: "spring" as const, damping: 25, stiffness: 300 }}
             className="w-[340px] sm:w-[380px] bg-white dark:bg-gray-950 rounded-3xl shadow-2xl border border-border/50 overflow-hidden"
           >
             {/* Header */}

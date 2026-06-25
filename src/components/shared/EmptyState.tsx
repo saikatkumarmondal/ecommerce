@@ -27,7 +27,7 @@ export function EmptyState({
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        transition={{ type: "spring" as const, stiffness: 100, damping: 20 }}
         className="relative max-w-md w-full flex flex-col items-center text-center p-8 sm:p-12 rounded-[2.5rem] bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm backdrop-blur-sm group overflow-hidden"
       >
         {/* Background Visual Flair (Floating Ambient Glows) */}

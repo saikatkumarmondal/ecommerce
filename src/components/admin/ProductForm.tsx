@@ -100,9 +100,12 @@ export function ProductForm({ open, onClose, editingProduct }: ProductFormProps)
 
     try {
       if (editingProduct) {
-        await updateProduct({ id: editingProduct.id, data: payload }).unwrap();
+        await updateProduct({ 
+          id: editingProduct.id, 
+          data: payload as any 
+        }).unwrap();
       } else {
-        await createProduct(payload).unwrap();
+        await createProduct(payload as any).unwrap();
       }
       onClose();
     } catch (err: any) {
@@ -131,7 +134,7 @@ export function ProductForm({ open, onClose, editingProduct }: ProductFormProps)
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            transition={{ type: "spring" as const, stiffness: 300, damping: 25 }}
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full sm:h-auto sm:w-[92vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[100vh] sm:max-h-[88vh] overflow-y-auto bg-white sm:rounded-2xl shadow-2xl z-50 p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-5 sticky top-0 bg-white py-2 z-10 border-b border-gray-100 sm:border-none">

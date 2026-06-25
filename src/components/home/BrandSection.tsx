@@ -55,7 +55,7 @@ export function BrandSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-20px" }}
                 transition={{ 
-                  type: "spring",
+                  type: "spring" as const,
                   stiffness: 90,
                   damping: 16,
                   delay: idx * 0.04 
@@ -71,7 +71,7 @@ export function BrandSection() {
                       z: 15
                     }}
                     transition={{ 
-                      type: "spring", 
+                      type: "spring" as const, 
                       stiffness: 200, 
                       damping: 14 
                     }}

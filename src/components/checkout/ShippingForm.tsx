@@ -55,7 +55,7 @@ const itemVariants = {
   visible: { 
     opacity: 1, 
     y: 0, 
-    transition: { type: "spring", stiffness: 300, damping: 24 } 
+    transition: { type: "spring" as const, stiffness: 300, damping: 24 } 
   }
 };
 
@@ -232,7 +232,7 @@ export function ShippingForm({ onSubmit, defaultValues }: ShippingFormProps) {
             <motion.div
               whileHover={{ y: -5 }}
               whileTap={{ y: 1.5 }}
-              transition={{ type: "spring", stiffness: 450, damping: 14 }}
+              transition={{ type: "spring" as const, stiffness: 450, damping: 14 }}
             >
               <Button
                 type="submit"

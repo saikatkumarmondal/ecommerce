@@ -66,7 +66,7 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
             initial="closed"
             animate="open"
             exit="closed"
-            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            transition={{ type: "spring" as const, damping: 30, stiffness: 300 }}
             className="fixed left-0 top-0 bottom-0 w-80 bg-white dark:bg-gray-950 z-50 shadow-2xl lg:hidden flex flex-col overflow-y-auto"
           >
             {/* Header */}

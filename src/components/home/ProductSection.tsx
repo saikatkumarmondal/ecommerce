@@ -6,16 +6,17 @@ import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/ProductCard";
-import { ProductCardSkeleton } from "@/components/shared/LoadingSkeleton";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { useGetProductsQuery } from "@/services/productApi";
 import { ProductFilters } from "@/types/product.types";
+import { cn } from "@/lib/utils";
 
 interface ProductSectionProps {
   title: string;
   subtitle: string;
   queryParams: ProductFilters;
   viewAllHref: string;
+  variant?: "default" | "dark" | "accent";
 }
 
 export function ProductSection({
@@ -23,6 +24,7 @@ export function ProductSection({
   subtitle,
   queryParams,
   viewAllHref,
+  variant = "default",
 }: ProductSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { data, isLoading } = useGetProductsQuery(queryParams);
@@ -37,10 +39,20 @@ export function ProductSection({
     });
   };
 
+  const isDark = variant === "dark";
+  const isAccent = variant === "accent";
+
   return (
-    <section className="py-24 w-full bg-white text-black light relative overflow-visible">
+    <section
+      className={cn(
+        "py-24 w-full relative overflow-visible",
+        isDark && "bg-zinc-950 text-white",
+        isAccent && "bg-amber-50 text-black",
+        !isDark && !isAccent && "bg-white text-black"
+      )}
+    >
       <div className="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header Layout */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
           <div>
@@ -48,7 +60,10 @@ export function ProductSection({
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-amber-600 font-extrabold text-xs uppercase tracking-widest mb-2"
+              className={cn(
+                "font-extrabold text-xs uppercase tracking-widest mb-2",
+                isDark ? "text-amber-400" : "text-amber-600"
+              )}
             >
               {subtitle}
             </motion.p>
@@ -57,7 +72,10 @@ export function ProductSection({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-black"
+              className={cn(
+                "text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight",
+                isDark ? "text-white" : "text-black"
+              )}
             >
               {title}
             </motion.h2>
@@ -67,25 +85,45 @@ export function ProductSection({
           <div className="flex items-center gap-4 self-end sm:self-auto">
             <Link
               href={viewAllHref}
-              className="group flex items-center gap-1.5 text-sm font-bold text-black hover:text-amber-600 transition-colors mr-2"
+              className={cn(
+                "group flex items-center gap-1.5 text-sm font-bold transition-colors mr-2",
+                isDark
+                  ? "text-white hover:text-amber-400"
+                  : "text-black hover:text-amber-600"
+              )}
             >
               View all{" "}
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5" />
             </Link>
-            
-            <div className="flex items-center gap-2 bg-zinc-100 p-1 rounded-full border border-zinc-200">
+
+            <div
+              className={cn(
+                "flex items-center gap-2 p-1 rounded-full border",
+                isDark ? "bg-zinc-800 border-zinc-700" : "bg-zinc-100 border-zinc-200"
+              )}
+            >
               <button
                 onClick={() => scroll("left")}
                 aria-label="Scroll Left"
-                className="w-10 h-10 rounded-full flex items-center justify-center bg-white text-black border border-zinc-200 hover:bg-black hover:text-white hover:border-black shadow-sm transition-all active:scale-95"
+                className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center border shadow-sm transition-all active:scale-95",
+                  isDark
+                    ? "bg-zinc-700 text-white border-zinc-600 hover:bg-white hover:text-black"
+                    : "bg-white text-black border-zinc-200 hover:bg-black hover:text-white hover:border-black"
+                )}
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              
+
               <button
                 onClick={() => scroll("right")}
                 aria-label="Scroll Right"
-                className="w-10 h-10 rounded-full flex items-center justify-center bg-white text-black border border-zinc-200 hover:bg-black hover:text-white hover:border-black shadow-sm transition-all active:scale-95"
+                className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center border shadow-sm transition-all active:scale-95",
+                  isDark
+                    ? "bg-zinc-700 text-white border-zinc-600 hover:bg-white hover:text-black"
+                    : "bg-white text-black border-zinc-200 hover:bg-black hover:text-white hover:border-black"
+                )}
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -97,11 +135,24 @@ export function ProductSection({
         {isLoading ? (
           <div className="flex gap-6 overflow-hidden">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="flex-shrink-0 w-72 sm:w-85 h-[420px] bg-zinc-100 rounded-[2.5rem]" />
+              <div
+                key={i}
+                className={cn(
+                  "flex-shrink-0 w-72 sm:w-85 h-[420px] rounded-[2.5rem]",
+                  isDark ? "bg-zinc-800" : "bg-zinc-100"
+                )}
+              />
             ))}
           </div>
         ) : products.length === 0 ? (
-          <div className="p-16 rounded-[2.5rem] border-2 border-dashed border-zinc-200 text-center bg-zinc-50/50">
+          <div
+            className={cn(
+              "p-16 rounded-[2.5rem] border-2 border-dashed text-center",
+              isDark
+                ? "border-zinc-700 bg-zinc-900/50"
+                : "border-zinc-200 bg-zinc-50/50"
+            )}
+          >
             <EmptyState
               icon={ShoppingBag}
               title="No products found"
@@ -113,10 +164,7 @@ export function ProductSection({
             <div
               ref={scrollRef}
               className="flex gap-8 overflow-x-auto pb-10 pt-4 px-2 scroll-smooth snap-x snap-mandatory"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {products.map((product, idx) => (
                 <motion.div
@@ -125,21 +173,20 @@ export function ProductSection({
                   whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
                   viewport={{ once: true, margin: "-20px" }}
                   transition={{
-                    type: "spring",
+                    type: "spring" as const,
                     stiffness: 85,
                     damping: 16,
                     delay: idx * 0.04,
                   }}
-                  whileHover={{ 
+                  whileHover={{
                     y: -14,
                     scale: 1.03,
                     rotateX: 6,
                     rotateY: -4,
-                    z: 25
+                    z: 25,
                   }}
                   className="flex-shrink-0 w-72 sm:w-85 snap-start p-4 bg-white border-2 border-zinc-100 hover:border-zinc-300 rounded-[2.5rem] shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)] transition-shadow duration-300 [transform-style:preserve-3d]"
                 >
-                  {/* Clean white card content container forcing text to be black */}
                   <div className="[transform:translateZ(35px)] w-full text-black bg-white">
                     <ProductCard product={product} />
                   </div>
@@ -154,7 +201,12 @@ export function ProductSection({
           <Link href={viewAllHref} className="block w-full">
             <Button
               variant="default"
-              className="w-full h-13 rounded-2xl text-sm font-bold uppercase tracking-wider bg-black text-white hover:bg-zinc-800"
+              className={cn(
+                "w-full h-13 rounded-2xl text-sm font-bold uppercase tracking-wider",
+                isDark
+                  ? "bg-white text-black hover:bg-zinc-200"
+                  : "bg-black text-white hover:bg-zinc-800"
+              )}
             >
               View All {title}
               <ArrowRight className="w-4 h-4 ml-2" />

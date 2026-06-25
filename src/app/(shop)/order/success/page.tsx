@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/store/hooks";
 import { clearCart } from "@/store/slices/cartSlice";
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const sessionId = searchParams.get("session_id");
@@ -23,14 +23,13 @@ export default function OrderSuccessPage() {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: "spring", stiffness: 200 }}
+        transition={{ type: "spring" as const, stiffness: 200 }}
         className="text-center max-w-md"
       >
-        {/* Success Icon */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          transition={{ delay: 0.2, type: "spring" as const, stiffness: 200 }}
           className="w-24 h-24 rounded-full bg-green-100 dark:bg-green-950/50 flex items-center justify-center mx-auto mb-6"
         >
           <CheckCircle className="w-14 h-14 text-green-500" />
@@ -43,8 +42,7 @@ export default function OrderSuccessPage() {
         >
           <h1 className="text-3xl font-black mb-3">Order Confirmed! 🎉</h1>
           <p className="text-muted-foreground mb-2">
-            Thank you for your purchase. Your payment was successful and your
-            order is being processed.
+            Thank you for your purchase. Your payment was successful and your order is being processed.
           </p>
           {sessionId && (
             <p className="text-xs text-muted-foreground bg-muted rounded-lg px-3 py-2 font-mono mb-6 truncate">
@@ -53,7 +51,6 @@ export default function OrderSuccessPage() {
           )}
         </motion.div>
 
-        {/* Steps */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,5 +104,17 @@ export default function OrderSuccessPage() {
         </motion.div>
       </motion.div>
     </div>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-4 border-black border-t-transparent animate-spin" />
+      </div>
+    }>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }

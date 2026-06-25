@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ApiResponse } from "@/types/api.types";
+import { UserRole } from "@/types/user.types";
 
 interface RegisterInput {
   name: string;
@@ -16,7 +17,7 @@ interface AuthUser {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: UserRole;  // string → UserRole
 }
 
 interface LoginResponse {

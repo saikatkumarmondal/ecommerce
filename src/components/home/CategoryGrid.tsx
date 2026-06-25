@@ -67,7 +67,7 @@ export function CategoryGrid() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ 
-                type: "spring",
+                type: "spring" as const,
                 stiffness: 80,
                 damping: 18,
                 delay: idx * 0.04 
@@ -83,7 +83,7 @@ export function CategoryGrid() {
                     rotateY: -6,
                   }}
                   transition={{ 
-                    type: "spring", 
+                    type: "spring" as const, 
                     stiffness: 180, 
                     damping: 14 
                   }}

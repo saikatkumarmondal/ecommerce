@@ -42,6 +42,12 @@ export interface Product {
   updatedAt: string;
 }
 
+// ✅ নতুন টাইপ যোগ করা হয়েছে (ReviewSection এর জন্য)
+export type ProductWithReviews = Product & {
+  reviews?: Review[];
+  totalReviews?: number;
+};
+
 export interface ProductFilters {
   search?: string;
   categoryId?: string;

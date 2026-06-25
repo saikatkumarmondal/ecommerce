@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { CategoryGrid } from "@/components/home/CategoryGrid";
 import { ProductSection } from "@/components/home/ProductSection";
@@ -8,26 +8,26 @@ import { BrandSection } from "@/components/home/BrandSection";
 import { Newsletter } from "@/components/home/Newsletter";
 import { PromoStrip } from "@/components/home/PromoStrip";
 
-const sectionRevealVariants = {
+const sectionRevealVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 50, damping: 20, mass: 1 }
-  }
+    transition: { type: "spring" as const, stiffness: 50, damping: 20, mass: 1 },
+  },
 };
 
 export default function HomePage() {
   return (
     <div className="w-full overflow-hidden bg-background min-h-screen selection:bg-primary selection:text-primary-foreground antialiased">
       <PromoStrip />
-      
+
       <main className="relative w-full overflow-visible z-10">
         <HeroCarousel />
       </main>
 
       <div className="space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-12 overflow-visible w-full">
-        
+
         <motion.div
           initial="hidden"
           whileInView="visible"

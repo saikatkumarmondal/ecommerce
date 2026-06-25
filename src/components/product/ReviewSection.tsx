@@ -26,7 +26,7 @@ const reviewSchema = z.object({
 type ReviewForm = z.infer<typeof reviewSchema>;
 
 interface ReviewSectionProps {
-  product: Product & { reviews: Review[] };
+  product: Product & { reviews?: Review[] };
 }
 
 export function ReviewSection({ product }: ReviewSectionProps) {
@@ -221,7 +221,7 @@ export function ReviewSection({ product }: ReviewSectionProps) {
                     whileHover={{ y: -2 }}
                     whileTap={{ y: 2 }}
                     className={cn(
-                      "relative w-full h-13 rounded-xl bg-primary text-primary-foreground font-black tracking-wide text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-xl border border-primary/20 border-b-4 border-primary-foreground/20 active:border-b transition-all uppercase",
+                      "relative w-full h-13 rounded-xl bg-primary text-primary-foreground font-black tracking-wide text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-xl border border-primary/20 border-b-4 border-primary-foreground/20 active:border transition-all uppercase",
                       isLoading && "opacity-80 cursor-not-allowed"
                     )}
                   >
@@ -263,7 +263,7 @@ export function ReviewSection({ product }: ReviewSectionProps) {
                     key={review.id}
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ type: "spring", stiffness: 140, damping: 16, delay: idx * 0.05 }}
+                    transition={{ type: "spring" as const, stiffness: 140, damping: 16, delay: idx * 0.05 }}
                     className="bg-card border hover:border-muted-foreground/30 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 group"
                   >
                     <div className="flex items-start gap-4">

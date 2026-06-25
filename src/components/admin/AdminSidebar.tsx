@@ -35,7 +35,7 @@ const sidebarVariants = {
   visible: {
     x: 0,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 280,
       damping: 30,
     },
@@ -113,7 +113,7 @@ export function AdminSidebar() {
                 scale: 1.05,
               }}
               transition={{
-                type: "spring",
+                type: "spring" as const,
                 stiffness: 300,
               }}
               className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-xl shadow-primary/25"
@@ -160,7 +160,7 @@ export function AdminSidebar() {
                       <motion.div
                         layoutId="admin-active-nav"
                         transition={{
-                          type: "spring",
+                          type: "spring" as const,
                           stiffness: 400,
                           damping: 35,
                         }}

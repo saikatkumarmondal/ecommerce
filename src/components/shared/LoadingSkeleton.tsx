@@ -1,15 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
-// Custom premium 3D shimmering element to replace standard flat skeletons
 function Shimmer3D({ className }: { className?: string }) {
   return (
     <div className={`relative overflow-hidden bg-slate-100/80 dark:bg-zinc-800/80 ${className}`}>
       <motion.div
-        animate={{
-          x: ["-100%", "100%"],
-        }}
+        animate={{ x: ["-100%", "100%"] }}
         transition={{
           repeat: Infinity,
           duration: 1.6,
@@ -21,19 +18,15 @@ function Shimmer3D({ className }: { className?: string }) {
   );
 }
 
-// 3D Stagger animation settings for parent grids
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-    },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
-// 3D pop-in transition for items
-const item3DVariants = {
+const item3DVariants: Variants = {
   hidden: { opacity: 0, y: 30, rotateX: 12, scale: 0.95 },
   show: {
     opacity: 1,
@@ -41,7 +34,7 @@ const item3DVariants = {
     rotateX: 0,
     scale: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 90,
       damping: 14,
     },
@@ -55,9 +48,7 @@ export function ProductCardSkeleton() {
       whileHover={{ y: -6, rotateY: 2, rotateX: -2, scale: 1.01 }}
       className="rounded-3xl border border-black/5 dark:border-white/5 bg-white dark:bg-zinc-900/50 p-3 shadow-[0_10px_30px_rgba(0,0,0,0.04)] backdrop-blur-sm transition-shadow duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] overflow-hidden transform-gpu"
     >
-      {/* Aspect Ratio Box with high 3D rounded depth */}
       <Shimmer3D className="aspect-square w-full rounded-2xl shadow-inner" />
-      
       <div className="p-3 space-y-3 mt-2">
         <Shimmer3D className="h-4 w-3/4 rounded-md" />
         <Shimmer3D className="h-3 w-1/2 rounded-md" />

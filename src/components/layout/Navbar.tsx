@@ -102,7 +102,7 @@ function CategoriesDropdown() {
             initial={{ opacity: 0, y: 8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            transition={{ type: "spring" as const, stiffness: 400, damping: 30 }}
             className="absolute top-full left-0 mt-2 w-64 bg-white/95 backdrop-blur-xl rounded-2xl border border-zinc-200 shadow-2xl shadow-black/10 overflow-hidden z-50"
           >
             {/* Header */}

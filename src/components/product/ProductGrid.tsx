@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -11,8 +11,7 @@ interface ProductGridProps {
   isLoading: boolean;
 }
 
-// 3D Stagger Container Variants
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -23,45 +22,43 @@ const containerVariants = {
   },
 };
 
-// 3D Card Animation Variants (Fades in, lifts up, and rotates slightly on X-axis)
-const cardVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: 40, 
-    rotateX: 15, 
-    scale: 0.95 
+const cardVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 40,
+    rotateX: 15,
+    scale: 0.95,
   },
-  show: { 
-    opacity: 1, 
-    y: 0, 
-    rotateX: 0, 
+  show: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
     scale: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
-      damping: 15
-    }
-  },
-};
-
-// Variants for the 3D staggered text loop
-const textContainerVariants = {
-  animate: {
-    transition: {
-      staggerChildren: 0.15, // Smooth lag between each word
+      damping: 15,
     },
   },
 };
 
-const wordVariants = {
+const textContainerVariants: Variants = {
   animate: {
     transition: {
-      staggerChildren: 0.05, // Quick, smooth cascade within characters of the same word
+      staggerChildren: 0.15,
     },
   },
 };
 
-const letterVariants = {
+const wordVariants: Variants = {
+  animate: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const letterVariants: Variants = {
   initial: { opacity: 0, y: 15, rotateX: -90 },
   animate: {
     opacity: [0, 1, 1, 0],
@@ -71,14 +68,12 @@ const letterVariants = {
       duration: 2.5,
       repeat: Infinity,
       ease: "easeInOut",
-      times: [0, 0.15, 0.85, 1], // Controlled timing to hold the words visible
+      times: [0, 0.15, 0.85, 1],
     },
   },
 };
 
 export function ProductGrid({ products, isLoading }: ProductGridProps) {
-  
-  // Custom 3D Stylish Premium Loader
   if (isLoading) {
     const text = "Just Wait Pls";
     const words = text.split(" ");
@@ -86,38 +81,36 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] w-full gap-8">
         <div className="relative flex items-center justify-center [perspective:800px]">
-          {/* Animated 3D Floating Shapes with Different Colors & Gradients */}
           <motion.div
-            animate={{ 
+            animate={{
               y: [0, -24, 0],
               rotateY: [0, 180, 360],
-              rotateX: [0, 45, 0]
+              rotateX: [0, 45, 0],
             }}
-            transition={{ 
-              duration: 1.8, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
+            transition={{
+              duration: 1.8,
+              repeat: Infinity,
+              ease: "easeInOut",
             }}
             className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-[0_15px_35px_rgba(139,92,246,0.4)] border border-white/20"
           />
           <motion.div
-            animate={{ 
+            animate={{
               y: [0, 24, 0],
               rotateY: [180, 360, 540],
-              scale: [0.8, 1.1, 0.8]
+              scale: [0.8, 1.1, 0.8],
             }}
-            transition={{ 
-              duration: 1.8, 
-              repeat: Infinity, 
+            transition={{
+              duration: 1.8,
+              repeat: Infinity,
               ease: "easeInOut",
-              delay: 0.2
+              delay: 0.2,
             }}
             className="absolute w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-emerald-400 mix-blend-multiply opacity-80 shadow-lg"
           />
         </div>
 
-        {/* 3D Staggered Smooth Text Animation */}
-        <motion.div 
+        <motion.div
           variants={textContainerVariants}
           animate="animate"
           className="flex gap-x-3 [perspective:500px] select-none"
@@ -168,20 +161,18 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
           key={product.id}
           variants={cardVariants}
           layout
-          whileHover={{ 
-            y: -10, 
+          whileHover={{
+            y: -10,
             scale: 1.02,
             rotateY: 2,
             rotateX: -2,
             z: 10,
-            transition: { type: "spring", stiffness: 300, damping: 20 }
+            transition: { type: "spring" as const, stiffness: 300, damping: 20 },
           }}
           whileTap={{ scale: 0.98 }}
           className="relative group rounded-3xl transition-shadow duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] will-change-transform transform-gpu"
         >
-          {/* Subtle Dynamic Ambient Backglow on Hover */}
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500 -z-10" />
-          
           <ProductCard product={product} />
         </motion.div>
       ))}

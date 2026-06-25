@@ -38,7 +38,7 @@ export function CheckoutStepper({ steps, currentStep }: CheckoutStepperProps) {
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    transition={{ type: "spring" as const, stiffness: 300 }}
                   >
                     <Check className="w-4 h-4" />
                   </motion.div>
