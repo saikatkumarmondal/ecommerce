@@ -7,7 +7,6 @@ import {
   X, Send, Minimize2, User,
   ArrowRight, Sparkles,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSendMessageMutation } from "@/services/chatApi";
 import { ChatMessage } from "@/services/chatApi";
@@ -39,7 +38,6 @@ export function AIChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [sendMessage, { isLoading }] = useSendMessageMutation();
 
-  // Open from Navbar chat icon click
   useEffect(() => {
     const handleOpen = () => {
       setIsOpen(true);
@@ -49,12 +47,10 @@ export function AIChatWidget() {
     return () => window.removeEventListener("openAIChat", handleOpen);
   }, []);
 
-  // Scroll to bottom on new message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
-  // Focus input when opened
   useEffect(() => {
     if (isOpen && !isMinimized && isAuthenticated) {
       setTimeout(() => inputRef.current?.focus(), 300);
@@ -86,8 +82,7 @@ export function AIChatWidget() {
         ...prev,
         {
           role: "assistant",
-          content:
-            "Sorry, I'm having trouble right now. Please try again in a moment.",
+          content: "Sorry, I'm having trouble right now. Please try again in a moment.",
         },
       ]);
     }
@@ -100,7 +95,6 @@ export function AIChatWidget() {
     }
   };
 
-  // Simple markdown bold renderer
   const renderContent = (text: string) => {
     const parts = text.split(/\*\*(.*?)\*\*/g);
     return parts.map((part, i) =>
@@ -119,6 +113,7 @@ export function AIChatWidget() {
             exit={{ opacity: 0, y: 24, scale: 0.92 }}
             transition={{ type: "spring" as const, damping: 25, stiffness: 300 }}
             className="w-[340px] sm:w-[380px] bg-white dark:bg-gray-950 rounded-3xl shadow-2xl border border-border/50 overflow-hidden"
+            style={{ marginTop: "40px", maxHeight: "calc(100vh - 120px)" }}
           >
             {/* Header */}
             <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 px-4 py-3.5">
@@ -133,33 +128,34 @@ export function AIChatWidget() {
                     </p>
                     <div className="flex items-center gap-1 mt-0.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      <p className="text-white/70 text-[11px]">
-                        Powered by Gemini
-                      </p>
+                      <p className="text-white/70 text-[11px]">Powered by Gemini</p>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
+
+                {/* Header Buttons */}
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => setIsMinimized(true)}
-                    className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+                    className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center transition-all border border-white/30"
+                    title="Minimize"
                   >
-                    <Minimize2 className="w-3.5 h-3.5 text-white" />
+                    <Minimize2 className="w-4 h-4 text-white" />
                   </button>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+                    className="w-8 h-8 rounded-full bg-white/20 hover:bg-red-500 flex items-center justify-center transition-all border border-white/30"
+                    title="Close"
                   >
-                    <X className="w-3.5 h-3.5 text-white" />
+                    <X className="w-4 h-4 text-white" />
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* === GUEST VIEW === */}
+            {/* GUEST VIEW */}
             {!isAuthenticated ? (
               <div className="p-5">
-                {/* Guest Messages */}
                 <div className="space-y-3 mb-5">
                   {GUEST_MESSAGES.map((msg, idx) => (
                     <motion.div
@@ -179,18 +175,12 @@ export function AIChatWidget() {
                   ))}
                 </div>
 
-                {/* Features */}
                 <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-2xl p-4 mb-4">
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
                     ✨ What I can do
                   </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {[
-                      "🛍️ Find products",
-                      "📦 Track orders",
-                      "💰 Best deals",
-                      "❓ Any questions",
-                    ].map((feat) => (
+                    {["🛍️ Find products", "📦 Track orders", "💰 Best deals", "❓ Any questions"].map((feat) => (
                       <div
                         key={feat}
                         className="text-xs bg-white dark:bg-gray-900 rounded-xl px-3 py-2 font-medium shadow-sm"
@@ -201,15 +191,11 @@ export function AIChatWidget() {
                   </div>
                 </div>
 
-                {/* CTA Buttons */}
                 <div className="space-y-2.5">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setIsOpen(false);
-                      router.push("/register");
-                    }}
+                    onClick={() => { setIsOpen(false); router.push("/register"); }}
                     className="w-full h-11 rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-shadow"
                   >
                     <Sparkles className="w-4 h-4" />
@@ -220,10 +206,7 @@ export function AIChatWidget() {
                   <motion.button
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setIsOpen(false);
-                      router.push("/login");
-                    }}
+                    onClick={() => { setIsOpen(false); router.push("/login"); }}
                     className="w-full h-10 rounded-2xl border-2 border-border hover:border-primary/40 text-sm font-semibold transition-colors"
                   >
                     Already have an account? Sign in
@@ -231,10 +214,10 @@ export function AIChatWidget() {
                 </div>
               </div>
             ) : (
-              /* === AUTHENTICATED CHAT VIEW === */
+              /* AUTHENTICATED CHAT VIEW */
               <>
                 {/* Messages */}
-                <div className="h-80 overflow-y-auto p-4 space-y-3 bg-muted/10">
+                <div className="h-56 overflow-y-auto p-4 space-y-3 bg-muted/10">
                   {messages.map((msg, idx) => (
                     <motion.div
                       key={idx}
@@ -243,9 +226,7 @@ export function AIChatWidget() {
                       transition={{ duration: 0.2 }}
                       className={cn(
                         "flex gap-2.5",
-                        msg.role === "user"
-                          ? "justify-end"
-                          : "justify-start"
+                        msg.role === "user" ? "justify-end" : "justify-start"
                       )}
                     >
                       {msg.role === "assistant" && (
@@ -290,11 +271,7 @@ export function AIChatWidget() {
                               key={i}
                               className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600"
                               animate={{ y: [0, -5, 0], opacity: [0.5, 1, 0.5] }}
-                              transition={{
-                                duration: 0.7,
-                                repeat: Infinity,
-                                delay: i * 0.15,
-                              }}
+                              transition={{ duration: 0.7, repeat: Infinity, delay: i * 0.15 }}
                             />
                           ))}
                         </div>
@@ -308,18 +285,10 @@ export function AIChatWidget() {
                 {messages.length === 1 && (
                   <div className="px-4 pb-2">
                     <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                      {[
-                        "Find best deals",
-                        "Track my order",
-                        "Return policy",
-                        "Recommend products",
-                      ].map((prompt) => (
+                      {["Find best deals", "Track my order", "Return policy", "Recommend products"].map((prompt) => (
                         <button
                           key={prompt}
-                          onClick={() => {
-                            setInput(prompt);
-                            inputRef.current?.focus();
-                          }}
+                          onClick={() => { setInput(prompt); inputRef.current?.focus(); }}
                           className="flex-shrink-0 text-xs bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200/50 dark:border-blue-800/50 text-blue-700 dark:text-blue-400 px-3 py-1.5 rounded-full font-medium hover:from-blue-100 hover:to-purple-100 transition-colors"
                         >
                           {prompt}
@@ -382,7 +351,7 @@ export function AIChatWidget() {
                 setIsOpen(false);
                 setIsMinimized(false);
               }}
-              className="ml-1 text-muted-foreground hover:text-foreground transition-colors"
+              className="ml-1 w-6 h-6 rounded-full hover:bg-red-100 flex items-center justify-center text-muted-foreground hover:text-red-500 transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -390,25 +359,18 @@ export function AIChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* FAB — Gemini Icon */}
+      {/* FAB */}
       {!isOpen && (
         <motion.button
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
-          onClick={() => {
-            setIsOpen(true);
-            setIsMinimized(false);
-          }}
+          onClick={() => { setIsOpen(true); setIsMinimized(false); }}
           className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 shadow-xl flex items-center justify-center group"
         >
           <GeminiIcon className="w-7 h-7" />
-
-          {/* Pulse ring */}
           <span className="absolute inset-0 rounded-2xl animate-ping bg-purple-500 opacity-20 group-hover:opacity-0" />
-
-          {/* Tooltip */}
           <div className="absolute right-16 bg-gray-900 text-white text-xs font-medium px-3 py-1.5 rounded-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
             Chat with Gemini AI
             <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45" />

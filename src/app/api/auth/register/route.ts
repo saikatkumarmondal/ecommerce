@@ -45,10 +45,7 @@ export async function POST(req: NextRequest) {
       { success: true, message: "Registration successful", data: user },
       { status: 201 }
     );
-  } catch {
-    return NextResponse.json(
-      { success: false, message: "Server error" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return NextResponse.json({ success: false, message: "Server error", error: String(error) }, { status: 500 });
   }
 }
